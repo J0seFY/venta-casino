@@ -5,12 +5,19 @@ import Modelo.Estudiante;
 import Modelo.Producto;
 import Modelo.Tienda;
 import Modelo.Venta;
+import Modelo.ClientesRepositorio;
+import Modelo.ProductosRepositorio;
+import Modelo.VentasRepositorio;
 import Vista.VistaConsola;
+import Persistencia.RepositorioTxt;
 
 public class VentaController {
     private Tienda tienda;
     private VistaConsola vista;
     private Venta ventaActual;
+    private ClientesRepositorio clientesRepo;
+    private ProductosRepositorio productosRepo;
+    private VentasRepositorio ventasRepo;
 
     public VentaController(Tienda tienda, VistaConsola vista) {
         this.tienda = tienda;
@@ -18,7 +25,13 @@ public class VentaController {
     }
 
     public void iniciar() {
-        tienda.cargarDesdeArchivos();
+        // Cargar datos desde repositorios (controlador actúa como intermediario)
+        var clientes = clientesRepo.cargarClientes();
+        var productos = productosRepo.cargarProductos();
+        tienda.setClientes(clientes);
+        tienda.setProductos(productos);
+        var ventas = ventasRepo.cargarVentas(tienda.obtenerClientes(), tienda.obtenerProductos());
+        tienda.setVentas(ventas);
         int opcion;
         do {
             opcion = vista.mostrarMenuPrincipal();
@@ -37,6 +50,10 @@ public class VentaController {
                     break;
                 case 9:
                     tienda.cargarDatos();
+                    // Persistir datos de ejemplo
+                    productosRepo.guardarProductos(tienda.obtenerProductos());
+                    clientesRepo.guardarClientes(tienda.obtenerClientes());
+                    ventasRepo.guardarVentas(tienda.obtenerHistorial());
                     vista.mostrarMensaje("Datos de ejemplo cargados.");
                     break;
                 case 0:
@@ -57,24 +74,32 @@ public class VentaController {
                     vista.listarClientes(tienda.obtenerClientes());
                     break;
                 case 2: {
-                    Cliente c = vista.pedirDatosCliente();
-                    if (c != null) {
-                        if (tienda.buscarCliente(c.getRut()) != null) {
+                    String rut = vista.pedirRutCliente();
+                    if (rut != null && !rut.isEmpty()) {
+                        if (tienda.buscarCliente(rut) != null) {
                             vista.mostrarError("Ya existe un cliente con ese RUT.");
                         } else {
+                            String nombre = vista.pedirNombre();
+                            if (nombre == null || nombre.isEmpty()) { vista.mostrarError("Nombre inválido."); break; }
+                            Cliente c = new Cliente(rut, nombre);
                             tienda.agregarCliente(c);
+                            clientesRepo.guardarClientes(tienda.obtenerClientes());
                             vista.mostrarMensaje("Cliente creado.");
                         }
                     }
                     break;
                 }
                 case 3: {
-                    Estudiante e = vista.pedirDatosEstudiante();
-                    if (e != null) {
-                        if (tienda.buscarCliente(e.getRut()) != null) {
+                    String rut = vista.pedirRutCliente();
+                    if (rut != null && !rut.isEmpty()) {
+                        if (tienda.buscarCliente(rut) != null) {
                             vista.mostrarError("Ya existe un cliente con ese RUT.");
                         } else {
+                            String nombre = vista.pedirNombre();
+                            double saldo = vista.pedirSaldoBeca();
+                            Estudiante e = new Estudiante(rut, nombre, saldo);
                             tienda.agregarCliente(e);
+                            clientesRepo.guardarClientes(tienda.obtenerClientes());
                             vista.mostrarMensaje("Estudiante creado.");
                         }
                     }
@@ -104,12 +129,17 @@ public class VentaController {
                     vista.listarProductos(tienda.obtenerProductos());
                     break;
                 case 2: {
-                    Producto p = vista.pedirDatosProducto();
-                    if (p != null) {
-                        if (tienda.buscarProducto(p.getId()) != null) {
+                    String id = vista.pedirIdProducto();
+                    if (id != null && !id.isEmpty() && !id.equalsIgnoreCase("fin")) {
+                        if (tienda.buscarProducto(id) != null) {
                             vista.mostrarError("Ya existe un producto con ese ID.");
                         } else {
+                            String nombre = vista.pedirNombreProducto();
+                            double precio = vista.pedirPrecioProducto();
+                            int stock = vista.pedirStockProducto();
+                            Producto p = new Producto(id, nombre, precio, stock);
                             tienda.agregarProducto(p);
+                            productosRepo.guardarProductos(tienda.obtenerProductos());
                             vista.mostrarMensaje("Producto agregado.");
                         }
                     }
@@ -139,15 +169,20 @@ public class VentaController {
             if (crear) {
                 boolean esEst = vista.confirmar("¿Es estudiante? (s/n): ");
                 if (esEst) {
-                    Estudiante e = vista.pedirDatosEstudianteConRut(rut);
+                    String nombre = vista.pedirNombre();
+                    double saldo = vista.pedirSaldoBeca();
+                    Estudiante e = new Estudiante(rut, nombre, saldo);
                     if (e != null) {
                         tienda.agregarCliente(e);
+                        clientesRepo.guardarClientes(tienda.obtenerClientes());
                         cliente = e;
                     }
                 } else {
-                    Cliente c = vista.pedirDatosClienteConRut(rut);
+                    String nombre = vista.pedirNombre();
+                    Cliente c = new Cliente(rut, nombre);
                     if (c != null) {
                         tienda.agregarCliente(c);
+                        clientesRepo.guardarClientes(tienda.obtenerClientes());
                         cliente = c;
                     }
                 }
@@ -207,6 +242,10 @@ public class VentaController {
             }
             if (pagado) {
                 tienda.registrarVenta(ventaActual);
+                // Persistencia coordinada por el controlador
+                clientesRepo.guardarClientes(tienda.obtenerClientes());
+                productosRepo.guardarProductos(tienda.obtenerProductos());
+                ventasRepo.guardarVentas(tienda.obtenerHistorial());
                 vista.mostrarVenta(ventaActual);
             } else {
                 vista.mostrarMensaje("Venta no pagada. Cancelada.");
@@ -221,6 +260,11 @@ public class VentaController {
         Tienda tienda = new Tienda();
         VistaConsola vista = new VistaConsola();
         VentaController controlador = new VentaController(tienda, vista);
+        // Inyectar repositorios (implementación TXT)
+        RepositorioTxt repoTxt = new RepositorioTxt();
+        controlador.clientesRepo = repoTxt;
+        controlador.productosRepo = repoTxt;
+        controlador.ventasRepo = repoTxt;
         controlador.iniciar();
     }
 }

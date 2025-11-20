@@ -2,20 +2,16 @@ package Modelo;
 
 import java.util.ArrayList;
 import java.util.List;
-import Persistencia.RepositorioTxt;
 
 public class Tienda {
     private List<Producto> productos;
     private List<Cliente> clientes;
     private List<Venta> ventas;
-    private RepositorioTxt repo;
 
     public Tienda() {
         this.productos = new ArrayList<>();
         this.clientes = new ArrayList<>();
         this.ventas = new ArrayList<>();
-        this.repo = new RepositorioTxt();
-        cargarDesdeArchivos();
     }
 
     public void cargarDatos() {
@@ -31,8 +27,7 @@ public class Tienda {
         clientes.add(new Cliente("1-9", "Juan Perez"));
         clientes.add(new Estudiante("2-7", "Maria Lopez", 5000));
 
-        repo.guardarProductos(productos);
-        repo.guardarClientes(clientes);
+        // Persistencia delegada al nivel de aplicación/controlador
     }
 
     public Producto buscarProducto(String id) {
@@ -55,10 +50,7 @@ public class Tienda {
 
     public void registrarVenta(Venta venta) {
         ventas.add(venta);
-        // Persistir cambios en clientes (beca) y productos (stock), y ventas
-        repo.guardarClientes(clientes);
-        repo.guardarProductos(productos);
-        repo.guardarVentas(ventas);
+        // Persistencia delegada al nivel de aplicación/controlador
     }
 
     public List<Venta> obtenerHistorial() {
@@ -67,12 +59,12 @@ public class Tienda {
 
     public void agregarProducto(Producto p) {
         productos.add(p);
-        repo.guardarProductos(productos);
+        // Persistencia delegada al nivel de aplicación/controlador
     }
 
     public void agregarCliente(Cliente c) {
         clientes.add(c);
-        repo.guardarClientes(clientes);
+        // Persistencia delegada al nivel de aplicación/controlador
     }
 
     public List<Producto> obtenerProductos() {
@@ -83,12 +75,16 @@ public class Tienda {
         return new ArrayList<>(clientes);
     }
 
-    public void cargarDesdeArchivos() {
-        List<Cliente> cls = repo.cargarClientes();
-        List<Producto> prs = repo.cargarProductos();
-        this.clientes = (cls == null) ? new ArrayList<>() : new ArrayList<>(cls);
-        this.productos = (prs == null) ? new ArrayList<>() : new ArrayList<>(prs);
-        List<Venta> vts = repo.cargarVentas(this.clientes, this.productos);
-        this.ventas = (vts == null) ? new ArrayList<>() : new ArrayList<>(vts);
+    // Métodos de configuración para cargar datos desde el exterior (controlador/servicio)
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = (clientes == null) ? new ArrayList<>() : new ArrayList<>(clientes);
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = (productos == null) ? new ArrayList<>() : new ArrayList<>(productos);
+    }
+
+    public void setVentas(List<Venta> ventas) {
+        this.ventas = (ventas == null) ? new ArrayList<>() : new ArrayList<>(ventas);
     }
 }

@@ -10,8 +10,11 @@ import Modelo.Estudiante;
 import Modelo.Producto;
 import Modelo.Venta;
 import Modelo.DetalleVenta;
+import Modelo.ClientesRepositorio;
+import Modelo.ProductosRepositorio;
+import Modelo.VentasRepositorio;
 
-public class RepositorioTxt {
+public class RepositorioTxt implements ClientesRepositorio, ProductosRepositorio, VentasRepositorio {
     private static final String DATA_DIR = "data";
     private static final String FILE_CLIENTES = "clientes.txt";
     private static final String FILE_PRODUCTOS = "productos.txt";
@@ -23,6 +26,7 @@ public class RepositorioTxt {
         return d;
     }
 
+    @Override
     public List<Cliente> cargarClientes() {
         List<Cliente> clientes = new ArrayList<>();
         try {
@@ -53,6 +57,7 @@ public class RepositorioTxt {
         return clientes;
     }
 
+    @Override
     public List<Producto> cargarProductos() {
         List<Producto> productos = new ArrayList<>();
         try {
@@ -79,6 +84,7 @@ public class RepositorioTxt {
         return productos;
     }
 
+    @Override
     public void guardarClientes(List<Cliente> clientes) {
         try {
             Path path = dir().resolve(FILE_CLIENTES);
@@ -99,6 +105,7 @@ public class RepositorioTxt {
         }
     }
 
+    @Override
     public void guardarProductos(List<Producto> productos) {
         try {
             Path path = dir().resolve(FILE_PRODUCTOS);
@@ -113,6 +120,7 @@ public class RepositorioTxt {
         }
     }
 
+    @Override
     public List<Venta> cargarVentas(List<Cliente> clientes, List<Producto> productos) {
         List<Venta> ventas = new ArrayList<>();
         try {
@@ -172,6 +180,7 @@ public class RepositorioTxt {
         return ventas;
     }
 
+    @Override
     public void guardarVentas(List<Venta> ventas) {
         try {
             Path path = dir().resolve(FILE_VENTAS);

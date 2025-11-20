@@ -127,6 +127,7 @@ public class VistaConsola {
     }
 
     public Cliente pedirDatosCliente() {
+        // Obsoleto: usar pedirRutCliente() y pedirNombre() desde el controlador
         System.out.print("RUT: ");
         String rut = leerLinea();
         System.out.print("Nombre: ");
@@ -136,6 +137,7 @@ public class VistaConsola {
     }
 
     public Cliente pedirDatosClienteConRut(String rut) {
+        // Obsoleto: usar pedirNombre() desde el controlador
         System.out.print("Nombre: ");
         String nombre = leerLinea();
         if (nombre.isEmpty()) return null;
@@ -143,6 +145,7 @@ public class VistaConsola {
     }
 
     public Estudiante pedirDatosEstudiante() {
+        // Obsoleto: usar pedirRutCliente(), pedirNombre() y pedirSaldoBeca()
         System.out.print("RUT: ");
         String rut = leerLinea();
         System.out.print("Nombre: ");
@@ -153,6 +156,7 @@ public class VistaConsola {
     }
 
     public Estudiante pedirDatosEstudianteConRut(String rut) {
+        // Obsoleto: usar pedirNombre() y pedirSaldoBeca()
         System.out.print("Nombre: ");
         String nombre = leerLinea();
         System.out.print("Saldo beca: ");
@@ -161,6 +165,7 @@ public class VistaConsola {
     }
 
     public Producto pedirDatosProducto() {
+        // Obsoleto: usar pedirIdProducto(), pedirNombreProducto(), pedirPrecioProducto(), pedirStockProducto()
         System.out.print("ID: ");
         String id = leerLinea();
         System.out.print("Nombre: ");
@@ -170,6 +175,32 @@ public class VistaConsola {
         System.out.print("Stock: ");
         int stock = leerEnteroSeguro();
         return new Producto(id, nombre, precio, stock);
+    }
+
+    // Nuevos métodos primitivos para una vista más pasiva
+    public String pedirNombre() {
+        System.out.print("Nombre: ");
+        return leerLinea();
+    }
+
+    public double pedirSaldoBeca() {
+        System.out.print("Saldo beca: ");
+        return leerDoubleSeguro();
+    }
+
+    public String pedirNombreProducto() {
+        System.out.print("Nombre: ");
+        return leerLinea();
+    }
+
+    public double pedirPrecioProducto() {
+        System.out.print("Precio: ");
+        return leerDoubleSeguro();
+    }
+
+    public int pedirStockProducto() {
+        System.out.print("Stock: ");
+        return leerEnteroSeguro();
     }
 
     public boolean confirmar(String mensaje) {
