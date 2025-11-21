@@ -49,6 +49,8 @@ venta casino/
 └── datos_casino.bin                   # Archivo de persistencia (generado automáticamente)
 ```
 
+## Tutorial Uso de Plataforma
+[Video Tutorial](https://drive.google.com/file/d/1sU2zA2D8Tyc5IHSvkCY6_vX9GwIQQpAv/view?usp=drive_link)
 ##  Requisitos del Sistema
 
 - Java Development Kit (JDK) 8 o superior
