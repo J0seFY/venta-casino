@@ -2,7 +2,7 @@
 
 Sistema de gestión de ventas para casinos universitarios desarrollado en Java con interfaz gráfica Swing. Permite realizar ventas, gestionar inventario, registrar clientes y administrar múltiples métodos de pago incluyendo tarjeta JUNAEB.
 
-## 📋 Características
+##  Características
 
 - **Gestión de Ventas**: Proceso completo de venta con carrito de compras
 - **Múltiples Métodos de Pago**: 
@@ -17,14 +17,18 @@ Sistema de gestión de ventas para casinos universitarios desarrollado en Java c
 - **Gestión de Clientes**: Registro automático de clientes con RUT y nombre
 - **Persistencia de Datos**: Almacenamiento automático en archivo binario
 
-## 🚀 Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 - **Lenguaje**: Java SE
 - **Interfaz Gráfica**: Swing
 - **Persistencia**: Serialización de objetos (archivo binario)
 - **Arquitectura**: MVC (Modelo-Vista-Controlador)
 
-## 📁 Estructura del Proyecto
+## Digrama de Clases
+
+![Diagrama de Clases](diagrama_de_clases.svg)
+
+##  Estructura del Proyecto
 
 ```
 venta casino/
@@ -45,12 +49,12 @@ venta casino/
 └── datos_casino.bin                   # Archivo de persistencia (generado automáticamente)
 ```
 
-## 🛠️ Requisitos del Sistema
+##  Requisitos del Sistema
 
 - Java Development Kit (JDK) 8 o superior
 - Sistema operativo: Windows, Linux o macOS
 
-## ⚙️ Instalación y Ejecución
+##  Instalación y Ejecución
 
 ### Opción 1: Desde la terminal
 
@@ -71,7 +75,7 @@ venta casino/
 2. Asegurarse de que el JDK esté configurado correctamente
 3. Ejecutar la clase `Main.java`
 
-## 📖 Uso del Sistema
+##  Uso del Sistema
 
 ### Menú Principal
 
@@ -136,7 +140,7 @@ Visualiza todas las ventas realizadas con la siguiente información:
 - Cantidad
 - Subtotal
 
-## 💾 Persistencia de Datos
+##  Persistencia de Datos
 
 El sistema utiliza serialización de objetos Java para persistir los datos en el archivo `datos_casino.bin`. Los datos se guardan automáticamente después de cada operación que modifica el estado del sistema:
 
@@ -155,7 +159,7 @@ Al ejecutar por primera vez, el sistema carga los siguientes productos de ejempl
 | 103 | Fajita Pollo         | $2.800 | 15    |
 | 104 | Galleta Chocolate    | $500   | 100   |
 
-## 🎨 Características de la Interfaz
+##  Características de la Interfaz
 
 - **Look and Feel**: Utiliza el tema nativo del sistema operativo
 - **Diseño Responsive**: Componentes con tamaños adecuados y distribución optimizada
@@ -163,7 +167,7 @@ Al ejecutar por primera vez, el sistema carga los siguientes productos de ejempl
 - **Tablas Interactivas**: Para inventario e historial de ventas
 - **Validaciones**: Mensajes de error claros para operaciones inválidas
 
-## 🔒 Validaciones Implementadas
+##  Validaciones Implementadas
 
 - Verificación de stock disponible antes de agregar al carrito
 - Validación de monto en pago con efectivo
@@ -172,7 +176,7 @@ Al ejecutar por primera vez, el sistema carga los siguientes productos de ejempl
 - Prevención de ventas con carrito vacío
 - Control de duplicados en el carrito (actualiza cantidad si ya existe)
 
-## 🐛 Manejo de Errores
+##  Manejo de Errores
 
 El sistema maneja los siguientes tipos de errores:
 
