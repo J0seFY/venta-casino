@@ -1,106 +1,184 @@
-# Sistema de Ventas — Casino Universitario (Java, MVC)
+# Sistema de Ventas Casino Universitario
 
-Proyecto académico para practicar Modelado de Procesos e Información con Programación Orientada a Objetos (POO) y el patrón MVC. La aplicación es de consola y simula ventas en el casino de una universidad.
+Sistema de gestión de ventas para casinos universitarios desarrollado en Java con interfaz gráfica Swing. Permite realizar ventas, gestionar inventario, registrar clientes y administrar múltiples métodos de pago incluyendo tarjeta JUNAEB.
 
-## Objetivos de aprendizaje
-- Entender y aplicar MVC con responsabilidades claras.
-- Modelar dominio (clientes, productos, ventas, detalles) en POO.
-- Persistir datos sencillos usando archivos de texto (TXT).
-- Diseñar clases, relaciones y dependencias entre capas.
+## 📋 Características
 
-## Arquitectura (MVC + Persistencia)
-- `Controlador`:
-  - Orquesta el flujo, recibe entradas desde la vista, usa el modelo y persiste cambios a través de interfaces de repositorio.
-  - Clase principal: `Controlador.VentaController` (contiene `main`).
-- `Vista` (consola, pasiva):
-  - Solo muestra y solicita datos primitivos (String, int, double).
-  - No crea objetos de dominio (el controlador construye entidades).
-  - Clase: `Vista.VistaConsola`.
-- `Modelo` (dominio):
-  - Entidades: `Cliente`, `Estudiante`, `Producto`, `Venta`, `DetalleVenta`.
-  - Lógica: stock, totales, pago con beca, etc.
-  - Servicio de dominio simple: `Tienda` mantiene colecciones en memoria; NO conoce la persistencia.
-  - Interfaces de repositorio: `ClientesRepositorio`, `ProductosRepositorio`, `VentasRepositorio`.
-- `Persistencia`:
-  - Implementación TXT: `Persistencia.RepositorioTxt` que realiza las interfaces del modelo.
+- **Gestión de Ventas**: Proceso completo de venta con carrito de compras
+- **Múltiples Métodos de Pago**: 
+  - Efectivo (con cálculo de vuelto)
+  - Tarjeta de crédito/débito
+  - Tarjeta JUNAEB (con saldo virtual de $48.000)
+- **Gestión de Inventario**: 
+  - Visualización de productos disponibles
+  - Actualización de stock
+  - Registro de nuevos productos
+- **Historial de Ventas**: Registro completo de todas las transacciones realizadas
+- **Gestión de Clientes**: Registro automático de clientes con RUT y nombre
+- **Persistencia de Datos**: Almacenamiento automático en archivo binario
 
-## Diagrama de clases
-![Diagrama de clases](diagrama_de_clases.svg)
+## 🚀 Tecnologías Utilizadas
 
-## Estructura
+- **Lenguaje**: Java SE
+- **Interfaz Gráfica**: Swing
+- **Persistencia**: Serialización de objetos (archivo binario)
+- **Arquitectura**: MVC (Modelo-Vista-Controlador)
+
+## 📁 Estructura del Proyecto
+
 ```
-Controlador/
-  VentaController.java
-Modelo/
-  Cliente.java
-  Estudiante.java
-  Producto.java
-  DetalleVenta.java
-  Venta.java
-  Tienda.java
-  ClientesRepositorio.java
-  ProductosRepositorio.java
-  VentasRepositorio.java
-Persistencia/
-  RepositorioTxt.java
-Vista/
-  VistaConsola.java
-docs/
-  diagrama-clases.md
+venta casino/
+├── src/
+│   ├── Main.java                      # Punto de entrada de la aplicación
+│   ├── controlador/
+│   │   └── ControladorCasino.java     # Lógica de negocio y persistencia
+│   ├── modelo/
+│   │   ├── Cliente.java               # Entidad Cliente
+│   │   ├── DetalleVenta.java          # Detalle de productos en venta
+│   │   ├── Producto.java              # Entidad Producto
+│   │   └── Venta.java                 # Entidad Venta
+│   └── vista/
+│       ├── VistaPrincipal.java        # Ventana principal y menú
+│       ├── PanelVenta.java            # Panel de proceso de venta
+│       ├── PanelHistorial.java        # Panel de historial de ventas
+│       └── PanelInventario.java       # Panel de gestión de inventario
+└── datos_casino.bin                   # Archivo de persistencia (generado automáticamente)
 ```
 
-## Requisitos
-- Java 11 o superior (JDK). Verifica con `java -version` en tu terminal.
+## 🛠️ Requisitos del Sistema
 
-## Compilar y ejecutar (Windows PowerShell)
-Desde la carpeta raíz del proyecto:
-```powershell
-javac Controlador/VentaController.java Modelo/*.java Vista/*.java Persistencia/*.java
-java Controlador.VentaController
-```
+- Java Development Kit (JDK) 8 o superior
+- Sistema operativo: Windows, Linux o macOS
 
-## Funcionalidades principales
-- Gestión de clientes
-  - Listar, crear cliente, crear estudiante (con saldo de beca), buscar por RUT.
-- Gestión de productos
-  - Listar, agregar, consultar por ID.
-- Ventas
-  - Iniciar venta para un cliente (o crear uno si no existe).
-  - Agregar productos con validación de stock.
-  - Finalizar venta y pagar (estudiante: puede usar beca; si no alcanza, efectivo).
-- Historial de ventas
-  - Consulta de ventas anteriores (se cargan al iniciar la app).
+## ⚙️ Instalación y Ejecución
 
-## Persistencia (archivos TXT en `data/`)
-- Se generan automáticamente al usar la aplicación.
-- Formatos:
-  - `data/clientes.txt`
-    - Cliente normal: `C;RUT;Nombre`
-    - Estudiante: `E;RUT;Nombre;SaldoBeca`
-  - `data/productos.txt`
-    - `id;nombre;precio;stock`
-  - `data/ventas.txt`
-    - Cabecera venta: `V;idVenta;rutCliente`
-    - Detalle: `D;productoId;cantidad;precioUnitario`
-    - Línea en blanco separa ventas
+### Opción 1: Desde la terminal
 
-Ejemplo `ventas.txt`:
-```
-V;1;20373938-9
-D;1;2;500.0
+1. Clonar o descargar el repositorio
+2. Compilar el proyecto:
+   ```powershell
+   javac Main.java controlador/*.java modelo/*.java vista/*.java
+   ```
 
-V;2;1-9
-D;2;3;300.0
-D;3;1;1500.0
-```
+4. Ejecutar la aplicación:
+   ```powershell
+   java Main
+   ```
 
-## Flujo de uso rápido
-1. Ejecuta la app y elige `9` para cargar datos de ejemplo (opcional).
-2. Crea clientes/estudiantes y productos desde los menús 1 y 2.
-3. Inicia una venta (opción 3), agrega productos y finaliza.
-4. Revisa el historial (opción 4). Reinicia la app para verificar que la persistencia funciona.
+### Opción 2: Usando un IDE
 
-## Problemas comunes
-- Entrada por consola: si ves `Valor inválido`, vuelve a ingresar el número.
-- Rutas: compila/ejecuta desde la carpeta raíz del proyecto.
+1. Importar el proyecto en tu IDE favorito (IntelliJ IDEA, Eclipse, NetBeans)
+2. Asegurarse de que el JDK esté configurado correctamente
+3. Ejecutar la clase `Main.java`
+
+## 📖 Uso del Sistema
+
+### Menú Principal
+
+Al iniciar la aplicación, se presenta un menú con las siguientes opciones:
+
+1. **Iniciar Venta**: Proceso completo de venta
+2. **Listar Ventas**: Visualizar historial de transacciones
+3. **Gestión Inventario**: Administrar productos y stock
+4. **Salir**: Cerrar la aplicación
+
+### Proceso de Venta
+
+1. Seleccionar "Iniciar Venta" desde el menú principal
+2. Buscar y agregar productos al carrito (especificar cantidad)
+3. Ingresar datos del cliente (RUT y nombre)
+4. Seleccionar método de pago:
+   - **Efectivo**: Ingresar monto recibido (calcula vuelto automáticamente)
+   - **Tarjeta**: Ingresar número de tarjeta y clave
+   - **JUNAEB**: Ingresar código de 6 dígitos
+5. Confirmar la venta
+
+### Gestión de Inventario
+
+- **Ver Productos**: Tabla con ID, nombre, precio y stock
+- **Agregar Producto**: Formulario para registrar nuevos productos
+- **Aumentar Stock**: Seleccionar producto y especificar cantidad a agregar
+
+### Historial de Ventas
+
+Visualiza todas las ventas realizadas con la siguiente información:
+- ID de venta
+- Fecha y hora
+- Cliente (RUT y nombre)
+- Método de pago
+- Total
+- Vuelto (si aplica)
+
+## 🗃️ Modelo de Datos
+
+### Cliente
+- RUT (identificador único)
+- Nombre
+- Saldo JUNAEB (opcional)
+
+### Producto
+- ID
+- Nombre
+- Precio
+- Stock disponible
+
+### Venta
+- ID (timestamp)
+- Fecha y hora
+- Cliente
+- Lista de detalles (productos)
+- Método de pago
+- Total
+- Vuelto
+
+### DetalleVenta
+- Producto
+- Cantidad
+- Subtotal
+
+## 💾 Persistencia de Datos
+
+El sistema utiliza serialización de objetos Java para persistir los datos en el archivo `datos_casino.bin`. Los datos se guardan automáticamente después de cada operación que modifica el estado del sistema:
+
+- Creación de nuevas ventas
+- Modificación de inventario
+- Registro de nuevos clientes
+
+### Datos Iniciales
+
+Al ejecutar por primera vez, el sistema carga los siguientes productos de ejemplo:
+
+| ID  | Producto              | Precio | Stock |
+|-----|-----------------------|--------|-------|
+| 101 | Bebida Lata          | $1.200 | 50    |
+| 102 | Sándwich Ave Palta   | $2.500 | 20    |
+| 103 | Fajita Pollo         | $2.800 | 15    |
+| 104 | Galleta Chocolate    | $500   | 100   |
+
+## 🎨 Características de la Interfaz
+
+- **Look and Feel**: Utiliza el tema nativo del sistema operativo
+- **Diseño Responsive**: Componentes con tamaños adecuados y distribución optimizada
+- **Navegación Intuitiva**: Sistema de pestañas (CardLayout) para cambiar entre vistas
+- **Tablas Interactivas**: Para inventario e historial de ventas
+- **Validaciones**: Mensajes de error claros para operaciones inválidas
+
+## 🔒 Validaciones Implementadas
+
+- Verificación de stock disponible antes de agregar al carrito
+- Validación de monto en pago con efectivo
+- Verificación de saldo JUNAEB suficiente
+- Validación de formato de código JUNAEB (6 dígitos)
+- Prevención de ventas con carrito vacío
+- Control de duplicados en el carrito (actualiza cantidad si ya existe)
+
+## 🐛 Manejo de Errores
+
+El sistema maneja los siguientes tipos de errores:
+
+- Stock insuficiente
+- Datos de pago inválidos o incompletos
+- Saldo JUNAEB insuficiente
+- Carrito vacío al intentar finalizar venta
+- Errores de persistencia (lectura/escritura de archivos)
 
